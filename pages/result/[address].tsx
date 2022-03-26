@@ -17,7 +17,7 @@ interface tokenMetadata {
   symbol: string
 }
 
-function result() {
+function Result() {
   const [metadata, setMetadata] = useState<tokenMetadata>()
   const [nft, setNFT] = useState<any>()
   const Web3Api = useMoralisWeb3Api()
@@ -63,4 +63,4 @@ function result() {
   )
 }
 
-export default result
+export default Result
