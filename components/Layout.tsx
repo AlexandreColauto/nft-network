@@ -13,7 +13,7 @@ export default class Layout extends Component<Record<string, unknown>> {
   render() {
     return (
       <>
-        <div className="bg-primary h-full w-max">
+        <div className="bg-primary h-max w-max">
           <Header />
           <div className="flex">
             <div>
@@ -21,7 +21,7 @@ export default class Layout extends Component<Record<string, unknown>> {
               <VIP />
               <DonationWallets />
             </div>
-            <div className="h-screen bg-primary">
+            <div>
               <Carousel />
               {this.props.children}
             </div>

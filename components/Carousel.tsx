@@ -40,6 +40,7 @@ function Carousel() {
   }
   async function right(e: { preventDefault: () => void }) {
     if (carousel.current) {
+      console.log(carousel.current)
       carousel.current.scrollLeft += 300
     }
   }
@@ -49,12 +50,12 @@ function Carousel() {
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
       <div
-        className="flex max-w-[300px] md:max-w-[600px] lg:max-w-[900px] py-2 overflow-x-scroll no-scrollbar scroll-smooth"
+        className="flex snap-x max-w-[300px] md:max-w-[600px] lg:max-w-[900px] py-2 overflow-x-scroll no-scrollbar scroll-smooth"
         ref={carousel}
       >
         {collections.length > 0 &&
           collections.map((collection, id) => (
-            <div key={id} className="shrink-0 w-[268px] mx-4">
+            <div key={id} className="shrink-0 snap-center w-[268px] mx-4">
               <Card
                 name={collection.name}
                 logo={collection.logo}

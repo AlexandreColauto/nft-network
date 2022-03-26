@@ -18,8 +18,9 @@ interface tokenMetadata {
 }
 
 function result() {
-  const [metadata, setMetadate] = useState<tokenMetadata>()
+  const [metadata, setMetadata] = useState<tokenMetadata>()
   const [nft, setNFT] = useState<any>()
+  const [strings, setString] = useState<any>([])
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { address } = router.query
@@ -35,22 +36,27 @@ function result() {
       chain: 'bsc',
       address: address
     })
-    setMetadate(tokenMetadata?.result[0])
+    setMetadata(tokenMetadata?.result[0])
     const nftMetadata = JSON.parse(tokenMetadata.result[0].metadata)
     console.log(nftMetadata)
     setNFT(nftMetadata)
+    setString([
+      JSON.stringify(tokenMetadata?.result[0]),
+      tokenMetadata.result[0].metadata
+    ])
   }
 
   return (
     <div>
-      <div className="m-6 p-6 text-white bg-secondary rounded-xl max-w-[88Spx]">
+      <div className="m-6 p-6 text-white bg-secondary rounded-xl w-[68Spx] min-h-[1200px]">
         <h1>Result for {metadata?.token_address} </h1>
-        <p>{metadata?.contract_type}</p>
-        <p>{metadata?.name}</p>
-        <p>{metadata?.symbol}</p>
-        <p>{nft?.name}</p>
-        <p className="flex-wrap">{nft?.description}</p>
-        <img src={nft?.image} width={200} />
+        <br />
+        <span>API response: </span>
+        <pre className="break-all">{JSON.stringify(metadata, null, 2)}</pre>
+        <span>Metadata :</span>
+        <pre className="break-all">{JSON.stringify(nft, null, 2)}</pre>
+        <br />
+        <img src={nft?.image} width={600} />
       </div>
     </div>
   )
