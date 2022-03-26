@@ -20,30 +20,28 @@ interface tokenMetadata {
 function result() {
   const [metadata, setMetadata] = useState<tokenMetadata>()
   const [nft, setNFT] = useState<any>()
-  const [strings, setString] = useState<any>([])
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { address } = router.query
 
   useEffect(() => {
-    fetchTokenMetadata(address)
+    fetchTokenMetadata(address as string)
   }, [address])
 
-  const fetchTokenMetadata = async (address) => {
+  const fetchTokenMetadata = async (address: string) => {
     console.log(address)
     if (!address) return
     const tokenMetadata = await Web3Api.account.getNFTs({
       chain: 'bsc',
       address: address
     })
+    console.log(tokenMetadata)
     setMetadata(tokenMetadata?.result[0])
-    const nftMetadata = JSON.parse(tokenMetadata.result[0].metadata)
+    const nftMetadata = tokenMetadata.result[0]
+      ? JSON.parse(tokenMetadata.result[0]?.metadata)
+      : null
     console.log(nftMetadata)
     setNFT(nftMetadata)
-    setString([
-      JSON.stringify(tokenMetadata?.result[0]),
-      tokenMetadata.result[0].metadata
-    ])
   }
 
   return (

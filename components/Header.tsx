@@ -8,7 +8,7 @@ const Header = () => {
   const { isAuthenticated, authenticate } = useMoralis()
   return (
     <>
-      <div className="flex justify-between items-center -mt-4">
+      <div className="flex justify-between items-center -mt-4 max-w-screen-xl">
         <div className=" md:block md:mx-6 md:">
           <Image src={Logo} alt="Many Worlds - logo" height={130} width={130} />
         </div>
