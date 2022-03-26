@@ -4,11 +4,7 @@ import styles from '../styles/Home.module.css'
 import Carousel from '../components/Carousel'
 
 const Home: NextPage = () => {
-  return (
-    <div className={styles.container}>
-      <Carousel deviceType="desktop" />
-    </div>
-  )
+  return <div className={styles.container}></div>
 }
 
 export default Home
