@@ -7,7 +7,7 @@ import {
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
 
-function Carousel(props: { deviceType: string }) {
+function Carousel() {
   const [collections, setCollections] = useState([
     { name: '', logo: '', owner: '' }
   ])
@@ -44,7 +44,7 @@ function Carousel(props: { deviceType: string }) {
     }
   }
   return (
-    <div className="flex">
+    <div className="flex ml-4">
       <button onClick={(e) => left(e)} className="text-white ">
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
