@@ -31,17 +31,20 @@ function result() {
   const fetchTokenMetadata = async (address: string) => {
     console.log(address)
     if (!address) return
-    const tokenMetadata = await Web3Api.account.getNFTs({
-      chain: 'bsc',
-      address: address
-    })
-    console.log(tokenMetadata)
-    setMetadata(tokenMetadata?.result[0])
-    const nftMetadata = tokenMetadata.result[0]
-      ? JSON.parse(tokenMetadata.result[0]?.metadata)
-      : null
-    console.log(nftMetadata)
-    setNFT(nftMetadata)
+    const tokenMetadata = Web3Api.account
+      .getNFTs({
+        chain: 'bsc',
+        address: address
+      })
+      .then((value: any) => {
+        const tokenMetadata = value
+        setMetadata(tokenMetadata?.result[0])
+        const nftMetadata = tokenMetadata.result[0]
+          ? JSON.parse(tokenMetadata.result[0]?.metadata)
+          : null
+        console.log(nftMetadata)
+        setNFT(nftMetadata)
+      })
   }
 
   return (
