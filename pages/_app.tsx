@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 import React from 'react'
 import type { AppProps } from 'next/app'
-import Layout from '../components/Layout'
+import Layout from '../src/components/Layout'
 import { MoralisProvider, useMoralis } from 'react-moralis'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'

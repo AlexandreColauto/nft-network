@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useMoralis } from 'react-moralis'
-import Card from './Card'
+import Card from './CarouselCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
@@ -29,7 +29,6 @@ function Carousel() {
         logo: collection.attributes.image._url
       }
     })
-    console.log(_collections)
     setCollections(_collections)
   }
 
