@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import useClassifier from '../utils/useClassifier'
 
 function Search() {
   const [text, setText] = useState<string>('')
+  const [url, setUrl] = useState<string>('invalid')
+  const isEOA = useClassifier()
 
+  const searchValidation = async (e: string) => {
+    if (e.length == 42) {
+      const isWallet = await isEOA(e)
+      console.log(isWallet)
+      isWallet ? setUrl(isWallet) : null
+    }
+    setText(e)
+  }
   return (
     <>
       <div className="relative w-2/4 mx-auto text-gray-600">
@@ -12,10 +23,10 @@ function Search() {
           type="search"
           name="search"
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => searchValidation(e.target.value)}
           placeholder="Paste contract address"
         />
-        <Link href={`/result/${encodeURIComponent(text)}`}>
+        <Link href={`/${url}/${encodeURIComponent(text)}`}>
           <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
             <svg
               className="text-gray-600 h-4 w-4 fill-current"

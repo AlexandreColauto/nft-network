@@ -20,12 +20,10 @@ function Donations() {
     const results = await query.find()
     const _wallets = results.map((wallet) => {
       const address = wallet.attributes.address
-      console.log(address.substring(address.length - 5))
       return (
         address.substring(0, 4) + '...' + address.substring(address.length - 4)
       )
     })
-    console.log(_wallets)
     setWallets(_wallets)
   }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useMoralisWeb3Api } from 'react-moralis'
+import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 
 interface tokenMetadata {
   token_address: string
@@ -23,9 +23,11 @@ function Result() {
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { address } = router.query
+  const { Moralis } = useMoralis()
 
   useEffect(() => {
     fetchTokenMetadata(address as string)
+    isEOA()
   }, [address])
 
   const fetchTokenMetadata = async (address: string) => {
@@ -47,6 +49,11 @@ function Result() {
       })
   }
 
+  const isEOA = async () => {
+    const web3Provider = await Moralis.enableWeb3()
+    const code = await web3Provider.getCode(address as string)
+    console.log(code)
+  }
   return (
     <div>
       <div className="m-6 p-6 text-white bg-secondary rounded-xl w-[68Spx] min-h-[1200px]">
