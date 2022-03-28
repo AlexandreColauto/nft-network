@@ -54,9 +54,9 @@ function Result() {
   const fetchTransaction = useFetchTransaction()
 
   useEffect(() => {
-    //fetchNFTMeta()
-    //getHistory()
-    getTransactions()
+    fetchNFTMeta()
+    getHistory()
+    //getTransactions()
   }, [address])
 
   const fetchNFTMeta = async () => {
@@ -67,16 +67,8 @@ function Result() {
   const getHistory = async () => {
     if (address) {
       console.log('fetch history')
-      //const metadata = await fetchHistory(address as string)
+      const metadata = await fetchHistory(address as string)
       setMetadata(metadata)
-      if (true) {
-        console.log(metadata[0].token_address)
-        const tokenMetadata = await Web3Api.token.getAllTokenIds({
-          chain: 'polygon',
-          address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963' //metadata[0].token_address
-        })
-        console.log(tokenMetadata)
-      }
     }
   }
   const getTransactions = async () => {

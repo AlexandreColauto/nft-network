@@ -77,7 +77,7 @@ function HistoryTile(props: Props) {
 
   const shorter = (_address: string) => {
     if (user && _address === user.attributes.ethAddress.toLowerCase()) {
-      return 'User'
+      return 'You'
     } else {
       return (
         _address.substring(0, 4) +
