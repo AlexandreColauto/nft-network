@@ -136,7 +136,10 @@ function Result() {
         ) : (
           <>
             <div className="flex flex-wrap justify-around">
-              {nftlist && nftlist.map((nft: NFT) => <NFTCard {...nft} />)}
+              {nftlist &&
+                nftlist.map((nft: NFT, index: number) => (
+                  <NFTCard key={index} {...nft} />
+                ))}
             </div>
           </>
         )}
