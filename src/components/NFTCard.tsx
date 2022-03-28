@@ -10,7 +10,7 @@ interface Props {
 }
 
 function NFTCard(props: Props) {
-  const baseURL = 'https://opensea.io/assets/'
+  const baseURL = 'https://opensea.io/assets/matic/'
   const filterClName = () => {
     const collectionName = props.collectionName
     if (collectionName?.length > 15) {
@@ -26,13 +26,13 @@ function NFTCard(props: Props) {
   const [clName, setClName] = useState('')
   return (
     <div className="mb-8">
-      <div className="w-44 h-min overflow-hidden border rounded-xl ">
+      <div className="w-44 h-80 overflow-hidden border rounded-xl ">
         <div className="h-44 overflow-hidden items-center flex">
           <img src={props.image} alt="NFT Image" className="object-cover " />
         </div>
         <div className="p-2">
           <p className="text-gray-400 font-light">{clName}</p>
-          <p>{props.itemName}</p>
+          <p className="h-10">{props.itemName}</p>
           <br />
           <Link href={baseURL + props.token_address + '/' + props.token_id}>
             <button className="flex drop-shadow bg-primary rounded-full p-1 mx-auto">
