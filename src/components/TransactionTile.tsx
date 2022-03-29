@@ -68,14 +68,14 @@ function TransactionTile(props: Props) {
   const beautifyAddresses = () => {
     if (!user) return
     const _address = {
-      from_address: shorter(addresses.from_address),
-      to_address: shorter(addresses.to_address),
-      token_address: shorter(addresses.token_address)
+      from_address: shorten(addresses.from_address),
+      to_address: shorten(addresses.to_address),
+      token_address: shorten(addresses.token_address)
     }
     setAddresses(_address)
   }
 
-  const shorter = (_address: string) => {
+  const shorten = (_address: string) => {
     if (user && _address === user.attributes.ethAddress.toLowerCase()) {
       return 'User'
     } else {

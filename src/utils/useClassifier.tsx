@@ -10,7 +10,7 @@ function useClassifier() {
     try {
       const code = await web3Provider?.getCode(address)
       if (code?.length ? code.length > 4 : false) {
-        return 'smartcontract'
+        return 'contract'
       } else {
         return 'userwallet'
       }

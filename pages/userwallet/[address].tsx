@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 import NFTCard from '../../src/components/NFTCard'
 import axios from 'axios'
-import useFetchMeta from '../../src/utils/useFetchMeta'
+import useFetchMeta from '../../src/utils/useFetchUserMeta'
 import useFetchHistory from '../../src/utils/useFetchHistory'
 import useFetchTransaction from '../../src/utils/useFetchTransaction'
 import Link from 'next/link'
@@ -48,18 +48,20 @@ function Result() {
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { address } = router.query
-  const { Moralis } = useMoralis()
+  const { Moralis, enableWeb3 } = useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
-  const fetchTransaction = useFetchTransaction()
 
   useEffect(() => {
     fetchNFTMeta()
     getHistory()
-    //getTransactions()
   }, [address])
-
+  useEffect(() => {
+    enableWeb3()
+  }, [])
   const fetchNFTMeta = async () => {
+    console.log(address)
+    if (!address) return
     const meta = await fetchTokenMetadata(address as string)
     console.log(meta)
     setNFT(meta)
@@ -71,10 +73,7 @@ function Result() {
       setMetadata(metadata)
     }
   }
-  const getTransactions = async () => {
-    const transactions = fetchTransaction(address as string)
-    console.log(transactions)
-  }
+
   return (
     <div>
       <div className="m-6 p-6 text-white bg-secondary  rounded-xl w-min md:w-[885px] min-h-[1200px]">

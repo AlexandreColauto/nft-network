@@ -12,30 +12,19 @@ function useFetchHistory() {
     const tokenMetadata = await Web3Api.account.getNFTTransfers({
       chain: 'polygon',
       address: address,
-      limit: 2
+      limit: 15
     })
+    console.log(tokenMetadata)
     if (tokenMetadata.result?.length) {
-      const nftList = await Promise.all(
-        tokenMetadata.result.map(async (token) => {
-          const _token = {
-            from_address: token.from_address,
-            to_address: token.to_address,
-            token_address: token.token_address,
-            token_id: token.token_id,
-            transaction_type: '',
-            block_time: token.block_timestamp
-          }
-          if (token.from_address == nullAddress) {
-            token.transaction_type = 'mint'
-          } else if (token.from_address == address.toLowerCase()) {
-            token.transaction_type = 'sell'
-          } else if (token.to_address == address.toLowerCase()) {
-            token.transaction_type = 'buy'
-          }
-          console.log(token)
-          return token
-        })
-      )
+      tokenMetadata.result.map((token) => {
+        if (token.from_address == nullAddress) {
+          token.transaction_type = 'mint'
+        } else if (token.from_address == address.toLowerCase()) {
+          token.transaction_type = 'sell'
+        } else if (token.to_address == address.toLowerCase()) {
+          token.transaction_type = 'buy'
+        }
+      })
       return tokenMetadata.result
     }
   }

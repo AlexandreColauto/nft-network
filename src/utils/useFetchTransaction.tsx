@@ -12,7 +12,7 @@ function useFetchTransaction() {
     const tokenMetadata = await Web3Api.account.getTokenTransfers({
       chain: 'polygon',
       address: address,
-      limit: 10
+      limit: 15
     })
     console.log(tokenMetadata)
 

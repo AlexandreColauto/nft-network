@@ -27,9 +27,11 @@ function NFTCard(props: Props) {
   return (
     <div className="mb-8">
       <div className="w-44 h-80 overflow-hidden border rounded-xl ">
-        <div className="h-44 overflow-hidden items-center flex">
-          <img src={props.image} alt="NFT Image" className="object-cover " />
-        </div>
+        <Link href={`/contract/${props.token_address}`}>
+          <div className="h-44 overflow-hidden items-center flex">
+            <img src={props.image} alt="NFT Image" className="object-cover " />
+          </div>
+        </Link>
         <div className="p-2">
           <p className="text-gray-400 font-light">{clName}</p>
           <p className="h-10">{props.itemName}</p>
