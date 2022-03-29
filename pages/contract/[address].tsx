@@ -70,7 +70,7 @@ function Result() {
               }
               onClick={() => setShowHistory(false)}
             >
-              All NFT's
+              All NFT&apos;s
             </button>
           </li>
           <li className="mr-2">
