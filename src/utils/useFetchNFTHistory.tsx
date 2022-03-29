@@ -19,11 +19,11 @@ function useFetchHistory() {
     console.log(address)
     if (!address) return
     const tokenMetadata = await Web3Api.token.getContractNFTTransfers({
-      chain: 'polygon',
+      chain: 'bsc',
       address: address,
       limit: 15
     })
-    console.log(tokenMetadata)
+    console.log(tokenMetadata.result)
     if (tokenMetadata.result?.length) {
       const nftList = tokenMetadata.result.map((token) => {
         const _token: Metadata = {
@@ -34,9 +34,9 @@ function useFetchHistory() {
           contract_type: token.contract_type,
           value: token.value
         }
+        console.log(_token)
         return _token
       })
-      console.log(nftList)
       return nftList
     }
   }

@@ -33,7 +33,6 @@ function NFTHistoryTile(props: Props) {
           ? shorten(addresses.token_id)
           : addresses.token_id
     }
-    console.log(_address)
     setAddresses(_address)
   }
 

@@ -7,14 +7,12 @@ function useFetchHistory() {
   const nullAddress = '0x0000000000000000000000000000000000000000'
 
   const fetchTokenMetadata = async (address: string) => {
-    console.log(address)
     if (!address) return
     const tokenMetadata = await Web3Api.account.getNFTTransfers({
-      chain: 'polygon',
+      chain: 'bsc',
       address: address,
       limit: 15
     })
-    console.log(tokenMetadata)
     if (tokenMetadata.result?.length) {
       tokenMetadata.result.map((token) => {
         if (token.from_address == nullAddress) {

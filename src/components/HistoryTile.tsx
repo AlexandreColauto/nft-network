@@ -90,7 +90,6 @@ function HistoryTile(props: Props) {
 
   const defineDate = () => {
     const date = new Date(props.block_time)
-    console.log(props.block_time)
     const days = Math.floor(
       (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24)
     )

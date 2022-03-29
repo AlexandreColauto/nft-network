@@ -16,7 +16,7 @@ function useFetchCollection() {
   const fetchTokenMetadata = async (address: string) => {
     if (!address) return
     const tokenMetadata = await Web3Api.token.getAllTokenIds({
-      chain: 'polygon',
+      chain: 'bsc',
       address: address,
       limit: 15
     })
