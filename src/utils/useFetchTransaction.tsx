@@ -10,9 +10,9 @@ function useFetchTransaction() {
     console.log(address)
     if (!address) return
     const tokenMetadata = await Web3Api.account.getTokenTransfers({
-      chain: 'polygon',
+      chain: 'bsc',
       address: address,
-      limit: 10
+      limit: 15
     })
     console.log(tokenMetadata)
 

@@ -8,6 +8,7 @@ import {
   faCirclePlus
 } from '@fortawesome/free-solid-svg-icons'
 import ERC721 from '../utils/ERC721ABI.json'
+import Link from 'next/link'
 
 interface Props {
   from_address: string
@@ -68,14 +69,14 @@ function HistoryTile(props: Props) {
   const beautifyAddresses = () => {
     if (!user) return
     const _address = {
-      from_address: shorter(addresses.from_address),
-      to_address: shorter(addresses.to_address),
-      token_address: shorter(addresses.token_address)
+      from_address: shorten(addresses.from_address),
+      to_address: shorten(addresses.to_address),
+      token_address: shorten(addresses.token_address)
     }
     setAddresses(_address)
   }
 
-  const shorter = (_address: string) => {
+  const shorten = (_address: string) => {
     if (user && _address === user.attributes.ethAddress.toLowerCase()) {
       return 'You'
     } else {
@@ -92,6 +93,7 @@ function HistoryTile(props: Props) {
     const days = Math.floor(
       (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24)
     )
+    console.log(days)
     if (days > 1) {
       setDate(days + 'Days')
     }
@@ -106,12 +108,16 @@ function HistoryTile(props: Props) {
   return (
     <div>
       <div>
-        <div className="bg-secondary rounded-lg font-light flex text-center justify-around p-2 w-full text-slate-100">
+        <div className="bg-secondary rounded-lg font-light flex text-center justify-around p-2 w-full text-slate-100 hover:drop-shadow">
           <div className=" w-1/5">
             <FontAwesomeIcon icon={type.icon} className="text-gray-500 mx-2" />
             {type.text}
           </div>
-          <div className="mx-2 w-1/5">{addresses.token_address}</div>
+          <Link href={`/contract/${props.token_address}`}>
+            <div className="mx-2 w-1/5 hover:underline hover:drop-shadow hover:cursor-pointer">
+              {addresses.token_address}
+            </div>
+          </Link>
           <div className="mx-2 w-1/5">{addresses.from_address}</div>
           <div className="mx-2 w-1/5">{addresses.to_address}</div>
           <div className="mx-2 w-1/5">{days}</div>

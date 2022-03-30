@@ -9,8 +9,9 @@ function useFetchMeta() {
     console.log(address)
     if (!address) return
     const tokenMetadata = await Web3Api.account.getNFTs({
-      chain: 'polygon',
-      address: address
+      chain: 'bsc',
+      address: address,
+      limit: 12
     })
     console.log(tokenMetadata.result)
     if (tokenMetadata.result?.length) {

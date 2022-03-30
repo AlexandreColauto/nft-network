@@ -22,7 +22,6 @@ function VIP() {
         address: vips.attributes.address
       }
     })
-    console.log(_vips)
     setVips(_vips)
   }
 
