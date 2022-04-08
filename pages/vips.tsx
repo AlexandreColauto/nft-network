@@ -11,7 +11,7 @@ interface NFT {
   token_address: string
   token_id: string
 }
-function vips() {
+function Vips() {
   const fetchTokenMetadata = useFetchMeta()
   const [nftlist, setNFT] = useState<any>()
 
@@ -59,4 +59,4 @@ function vips() {
   )
 }
 
-export default vips
+export default Vips

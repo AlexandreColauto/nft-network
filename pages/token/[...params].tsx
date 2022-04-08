@@ -151,8 +151,8 @@ function NFTDetail() {
                         <th>Value</th>
                         <th>Block number</th>
                       </tr>
-                      {transactions.map((transaction) => (
-                        <tr className="text-center">
+                      {transactions.map((transaction, i) => (
+                        <tr key={i} className="text-center">
                           <td>{shorten(transaction.transaction_hash)}</td>
                           <td>{shorten(transaction.from_address)}</td>
                           <td>{shorten(transaction.to_address)}</td>
