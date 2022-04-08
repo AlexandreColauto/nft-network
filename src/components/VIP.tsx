@@ -41,11 +41,8 @@ function VIP() {
             <li>
               {vips.length > 0 &&
                 vips.map((vip, id) => (
-                  <Link href="vips">
-                    <div
-                      key={id}
-                      className="flex items-center cursor-pointer p-2 text-sm ml-4 font-normal text-white rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700"
-                    >
+                  <Link key={id} href="vips">
+                    <div className="flex items-center cursor-pointer p-2 text-sm ml-4 font-normal text-white rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700">
                       {vip.name}
                     </div>
                   </Link>
