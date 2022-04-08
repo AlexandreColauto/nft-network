@@ -46,7 +46,9 @@ function NFTHistoryTile(props: Props) {
           <Link
             href={`/token/${props.token_address}/${props.token_id}/${props.contract_type}/${props.name}/${props.owner_of}`}
           >
-            <div className="mx-2 w-1/5">{addresses.token_id}</div>
+            <div className="mx-2 w-1/5 hover:underline hover:drop-shadow hover:cursor-pointer">
+              {addresses.token_id}
+            </div>
           </Link>
           <div className="mx-2 w-1/5">{props.name}</div>
           <div className="mx-2 w-1/5">{props.symbol}</div>

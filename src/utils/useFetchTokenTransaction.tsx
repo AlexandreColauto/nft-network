@@ -1,13 +1,14 @@
-import { useMoralisWeb3Api } from 'react-moralis'
+import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 
 function useFetchTokenTransaction() {
   const Web3Api = useMoralisWeb3Api()
+  const { Moralis } = useMoralis()
 
   const fetchTokenMetadata = async (address: string, id: string) => {
-    console.log(address)
-    if (!address) return
+    const chainId = await Moralis.chainId
+    if (!address || !chainId) return
     const tokenMetadata = await Web3Api.token.getWalletTokenIdTransfers({
-      chain: 'bsc',
+      chain: chainId as any,
       address: address,
       limit: 5,
       token_id: id

@@ -1,15 +1,15 @@
-import React from 'react'
-import { useMoralisWeb3Api } from 'react-moralis'
+import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 import axios from 'axios'
 
 function useFetchMeta() {
   const Web3Api = useMoralisWeb3Api()
+  const { Moralis } = useMoralis()
 
   const fetchTokenMetadata = async (address: string) => {
-    console.log(address)
-    if (!address) return
+    const chainId = await Moralis.chainId
+    if (!address || !chainId) return
     const tokenMetadata = await Web3Api.account.getNFTs({
-      chain: 'bsc',
+      chain: chainId as any,
       address: address,
       limit: 12
     })
