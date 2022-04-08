@@ -8,12 +8,33 @@ const APP_ID = 'w0I1JAJxvmVnwRJ7fFqU4qCgKkmrHpZpVuLSJuoI'
 const SERVER_URL = 'https://ib6vmhqcic5f.usemoralis.com:2053/server'
 
 const Header = () => {
-  const { Moralis, authenticate, enableWeb3 } = useMoralis()
+  const {
+    authenticate,
+    isAuthenticated,
+    user,
+    isWeb3Enabled,
+    enableWeb3,
+    web3
+  } = useMoralis()
+
   useEffect(() => {
-    Moralis.start({ serverUrl: SERVER_URL, appId: APP_ID })
-    enableWeb3()
-    console.log('enabled')
+    tryWeb3()
   }, [])
+
+  const tryWeb3 = () => {
+    !isWeb3Enabled && !isAuthenticated ? enableWeb3() : null
+  }
+  async function login() {
+    console.log(isAuthenticated)
+    console.log(user)
+    tryWeb3()
+    if (!user) {
+      console.log('entrou')
+      const user = await authenticate({
+        signingMessage: 'Log in using Moralis'
+      })
+    }
+  }
 
   useEffect(() => {}, [])
   return (
@@ -23,10 +44,7 @@ const Header = () => {
           <Image src={Logo} alt="Many Worlds - logo" height={130} width={130} />
         </div>
         <SearchBar />
-        <button
-          className="mr-10 text-white font-bold "
-          onClick={() => authenticate()}
-        >
+        <button className="mr-10 text-white font-bold " onClick={login}>
           Connect Wallet
         </button>
       </div>

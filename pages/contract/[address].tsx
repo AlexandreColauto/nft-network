@@ -11,9 +11,10 @@ import useFetchHistory from '../../src/utils/useFetchNFTHistory'
 interface NFT {
   token_address: string
   token_id: string
-  nft_type: string
   name: string
   symbol: string
+  owner_of: string
+  contract_type: string
 }
 
 interface History {

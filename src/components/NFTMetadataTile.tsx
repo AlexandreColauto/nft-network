@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import useShorten from '../utils/useShorten'
 
 interface Props {
   token_address: string
   token_id: string
-  nft_type: string
+  contract_type: string
   name: string
   symbol: string
+  owner_of: string
 }
 
 function NFTHistoryTile(props: Props) {
@@ -14,6 +16,7 @@ function NFTHistoryTile(props: Props) {
     token_address: props.token_address,
     token_id: props.token_id
   })
+  const shorten = useShorten()
 
   useEffect(() => {
     beautifyAddresses()
@@ -31,12 +34,6 @@ function NFTHistoryTile(props: Props) {
     setAddresses(_address)
   }
 
-  const shorten = (_address: string) => {
-    return (
-      _address.substring(0, 4) + '...' + _address.substring(_address.length - 4)
-    )
-  }
-
   return (
     <div>
       <div>
@@ -46,10 +43,14 @@ function NFTHistoryTile(props: Props) {
               {addresses.token_address}
             </div>
           </Link>
-          <div className="mx-2 w-1/5">{addresses.token_id}</div>
+          <Link
+            href={`/token/${props.token_address}/${props.token_id}/${props.contract_type}/${props.name}/${props.owner_of}`}
+          >
+            <div className="mx-2 w-1/5">{addresses.token_id}</div>
+          </Link>
           <div className="mx-2 w-1/5">{props.name}</div>
           <div className="mx-2 w-1/5">{props.symbol}</div>
-          <div className="mx-2 w-1/5">{props.nft_type}</div>
+          <div className="mx-2 w-1/5">{props.contract_type}</div>
         </div>
       </div>
     </div>

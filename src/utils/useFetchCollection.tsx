@@ -5,7 +5,7 @@ import axios from 'axios'
 interface CollectionMetadata {
   token_address: string
   token_id: string
-  nft_type: string
+  contract_type: string
   name: string
   symbol: string
 }
@@ -29,7 +29,7 @@ function useFetchCollection() {
             token_address: token.token_address,
             token_id: token.token_id,
             symbol: token.symbol,
-            nft_type: token.contract_type
+            contract_type: token.contract_type
           }
 
           return _nft
