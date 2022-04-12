@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
-import NFTCard from '../src/components/NFTCard'
+import NFTCard from '../src/components/NFTCardIndex'
 import useFetchMeta from '../src/utils/useFetchIndexMeta'
 import useFetchHistory from '../src/utils/useFetchHistory'
 import HistoryTile from '../src/components/HistoryTile'
@@ -29,6 +29,7 @@ interface NFT {
   itemName: string
   token_address: string
   token_id: string
+  chain_id: string
 }
 interface history {
   from_address: string
@@ -44,13 +45,13 @@ const Home: NextPage = () => {
   const [nftlist, setNFT] = useState<any>()
   const [nftbatch, setBatch] = useState<any>()
   const [showHistory, setShowHistory] = useState<boolean>(false)
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [chain, setChain] = useState('')
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
-  const { Moralis, enableWeb3, user } = useMoralis()
+  const { Moralis, enableWeb3, user, isAuthenticated } = useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
   const address = user?.attributes.ethAddress
@@ -66,7 +67,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     fetchNFTMeta()
     getHistory()
-  }, [address, chainId])
+  }, [isAuthenticated, chainId])
 
   useEffect(() => {
     enableWeb3()
@@ -83,14 +84,14 @@ const Home: NextPage = () => {
   const fetchNFTMeta = async () => {
     console.log(address)
     if (!address || !chainId) return
+    setChain(chainId)
     const meta = await fetchTokenMetadata(address as string, 0, chainId)
     console.log(meta)
-    if (!meta) return
+    if (!meta) nextChain(chainId)
     setNFT(meta)
-    setChain(chainId)
   }
   const getHistory = async () => {
-    if (address) {
+    if (address && !metadata) {
       console.log('fetch history')
       const metadata = await fetchHistory(address as string)
       setMetadata(metadata)
@@ -99,33 +100,40 @@ const Home: NextPage = () => {
   const fetchMoreData = async () => {
     console.log(address)
     if (!address || !chainId) return
-    const meta = await fetchTokenMetadata(address as string, offset + 1, chain)
-    if (!meta || meta.length == 500) {
+    const meta = await fetchTokenMetadata(address as string, offset, chain)
+    if (meta?.length == 500) {
       setOffset(offset + 1)
     }
 
     const newNFTS = nftlist ? nftlist.concat(meta) : meta
     console.log(newNFTS)
-    setNFT(newNFTS)
-    return newNFTS
+    if (!newNFTS) {
+      nextChain(chain)
+    } else {
+      setNFT(newNFTS)
+      return newNFTS
+    }
   }
   const loadNextBatch = () => {
     if (!nftlist) return
+    console.log('new Batch!')
     const _batch = nftlist.slice(0, page * 20)
     if (_batch.length != nftlist.length) {
       setBatch(_batch)
+      console.log(_batch)
       setPage(page + 1)
     } else {
       if (nftlist.length < 500) {
-        nextChain()
+        nextChain(chain)
       } else {
         fetchMoreData()
       }
     }
   }
-  const nextChain = () => {
+  const nextChain = (_chain: string) => {
+    console.log('next chain' + _chain)
     if (hasMore)
-      switch (chain) {
+      switch (_chain) {
         case '0xfa':
           if (chainId !== chainList.ETH) {
             setChain(chainList.ETH)

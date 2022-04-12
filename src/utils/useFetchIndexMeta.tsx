@@ -33,7 +33,8 @@ function useFetchMeta() {
               itemName: metadata.data.name,
               collectionName: token.name,
               token_address: token.token_address,
-              token_id: token.token_id
+              token_id: token.token_id,
+              chain_id: chainId
             }
             return _nft
           } catch (e) {
@@ -43,7 +44,8 @@ function useFetchMeta() {
               itemName: 'No Name Avaliable',
               collectionName: token.name,
               token_address: token.token_address,
-              token_id: token.token_id
+              token_id: token.token_id,
+              chain_id: chainId
             }
             return _nft
           }

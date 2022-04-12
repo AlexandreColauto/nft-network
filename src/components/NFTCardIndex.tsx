@@ -13,7 +13,7 @@ interface Props {
 
 function NFTCard(props: Props) {
   const [baseURL, setBaseURL] = useState('')
-  const { chainId } = useChain()
+  const { chain_id } = props
   const filterClName = () => {
     const collectionName = props.collectionName
     if (collectionName?.length > 15) {
@@ -28,10 +28,10 @@ function NFTCard(props: Props) {
   }, [])
 
   const openSeaURL = () => {
-    if (chainId == '0x1') {
+    if (chain_id == '0x1') {
       setBaseURL('https://opensea.io/assets/')
     }
-    if (chainId == '0x89') {
+    if (chain_id == '0x89') {
       setBaseURL('https://opensea.io/assets/matic/')
     }
   }
@@ -51,17 +51,22 @@ function NFTCard(props: Props) {
         <div className="p-2">
           <p className="text-gray-400 font-light">{clName}</p>
           <p className="h-10">{props.itemName}</p>
-          <br />
+          {!baseURL && <br />}
           {baseURL && (
-            <Link href={baseURL + props.token_address + '/' + props.token_id}>
-              <button className="flex drop-shadow bg-primary rounded-full p-1 mx-auto">
-                Opensea
-                <span>
-                  <img src="/Open_SEA_LOGO.svg" width={25} />
-                </span>
-              </button>
-            </Link>
+            <div>
+              <Link href={baseURL + props.token_address + '/' + props.token_id}>
+                <button className="flex drop-shadow bg-primary rounded-full p-1 mx-auto mb-2">
+                  Opensea
+                  <span>
+                    <img src="/Open_SEA_LOGO.svg" width={25} />
+                  </span>
+                </button>
+              </Link>
+            </div>
           )}
+          <button className="flex drop-shadow bg-secondary border border-violet-700 rounded-full p-2 mx-auto">
+            <span className="text-sm"> Donate NFT </span>
+          </button>
         </div>
       </div>
     </div>
