@@ -51,7 +51,8 @@ const Home: NextPage = () => {
   const [chain, setChain] = useState('')
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
-  const { Moralis, enableWeb3, user, isAuthenticated } = useMoralis()
+  const { Moralis, enableWeb3, user, isAuthenticated, authenticate } =
+    useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
   const address = user?.attributes.ethAddress
@@ -186,8 +187,16 @@ const Home: NextPage = () => {
   return (
     <div>
       <div className="m-6 p-6 text-white bg-secondary  rounded-xl w-min md:w-[885px] min-h-[1200px]">
-        {!isAuthenticated ? (
-          <div>Se autentique para analizar as NFTs em sua carteira.</div>
+        {isAuthenticated ? (
+          <div className="text-2xl font-bold text-center mt-8">
+            Se autentique para analizar as NFTs em sua carteira. <br />
+            <button
+              className="mr-10 text-white font-bold border border-violet-600 p-2 rounded-xl"
+              onClick={() => authenticate()}
+            >
+              Autenticar
+            </button>
+          </div>
         ) : (
           <div>
             <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
