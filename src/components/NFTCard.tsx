@@ -17,7 +17,6 @@ function NFTCard(props: Props) {
       setClName(collectionName.substring(0, 15) + '...')
       return
     }
-    console.log(collectionName)
     setClName(collectionName)
   }
   useEffect(() => {
@@ -29,7 +28,11 @@ function NFTCard(props: Props) {
       <div className="w-44 h-80 overflow-hidden border rounded-xl ">
         <Link href={`/contract/${props.token_address}`}>
           <div className="h-44 overflow-hidden items-center flex">
-            <img src={props.image} alt="NFT Image" className="object-cover " />
+            <img
+              src={props.image}
+              alt="NFT Image"
+              className="object-cover -mt-1"
+            />
           </div>
         </Link>
         <div className="p-2">

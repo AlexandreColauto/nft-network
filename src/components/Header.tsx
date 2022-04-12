@@ -3,6 +3,7 @@ import Logo from './logo.png'
 import Image from 'next/image'
 import SearchBar from './Search'
 import { useMoralis } from 'react-moralis'
+import Dropdown from './Dropdown'
 
 const APP_ID = 'w0I1JAJxvmVnwRJ7fFqU4qCgKkmrHpZpVuLSJuoI'
 const SERVER_URL = 'https://ib6vmhqcic5f.usemoralis.com:2053/server'
@@ -28,12 +29,15 @@ const Header = () => {
     console.log(isAuthenticated)
     console.log(user)
     tryWeb3()
-    if (!user) {
+    if (!isAuthenticated) {
       console.log('entrou')
       const user = await authenticate({
         signingMessage: 'Log in using Moralis'
       })
     }
+    await authenticate({
+      signingMessage: 'Log in using Moralis'
+    })
   }
 
   useEffect(() => {}, [])
@@ -44,6 +48,7 @@ const Header = () => {
           <Image src={Logo} alt="Many Worlds - logo" height={130} width={130} />
         </div>
         <SearchBar />
+        <Dropdown />
         <button className="mr-10 text-white font-bold " onClick={login}>
           Connect Wallet
         </button>

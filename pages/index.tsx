@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 import NFTCard from '../src/components/NFTCard'
-import axios from 'axios'
-import useFetchMeta from '../src/utils/useFetchUserMeta'
+import useFetchMeta from '../src/utils/useFetchIndexMeta'
 import useFetchHistory from '../src/utils/useFetchHistory'
-import useFetchTransaction from '../src/utils/useFetchTransaction'
-import Link from 'next/link'
 import HistoryTile from '../src/components/HistoryTile'
 import HistoryTileHeader from '../src/components/HistoryTileHeader'
 import { NextPage } from 'next'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 interface tokenMetadata {
   token_address: string
@@ -44,27 +42,52 @@ interface history {
 const Home: NextPage = () => {
   const [metadata, setMetadata] = useState<any>()
   const [nftlist, setNFT] = useState<any>()
+  const [nftbatch, setBatch] = useState<any>()
   const [showHistory, setShowHistory] = useState<boolean>(false)
+  const [page, setPage] = useState(0)
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const [chain, setChain] = useState('')
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { Moralis, enableWeb3, user } = useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
   const address = user?.attributes.ethAddress
-  console.log(address)
+  const chainId = Moralis.chainId
+  const chainList = {
+    ETH: '0x1',
+    BSC: '0x38',
+    Polygon: '0x89',
+    Avax: '0xa86a',
+    Fantom: '0xfa'
+  }
+
   useEffect(() => {
     fetchNFTMeta()
     getHistory()
-  }, [address])
+  }, [address, chainId])
+
   useEffect(() => {
     enableWeb3()
   }, [])
+
+  useEffect(() => {
+    fetchMoreData()
+  }, [chain])
+
+  useEffect(() => {
+    loadNextBatch()
+  }, [nftlist])
+
   const fetchNFTMeta = async () => {
     console.log(address)
-    if (!address) return
-    const meta = await fetchTokenMetadata(address as string)
+    if (!address || !chainId) return
+    const meta = await fetchTokenMetadata(address as string, 0, chainId)
     console.log(meta)
+    if (!meta) return
     setNFT(meta)
+    setChain(chainId)
   }
   const getHistory = async () => {
     if (address) {
@@ -73,7 +96,85 @@ const Home: NextPage = () => {
       setMetadata(metadata)
     }
   }
+  const fetchMoreData = async () => {
+    console.log(address)
+    if (!address || !chainId) return
+    const meta = await fetchTokenMetadata(address as string, offset + 1, chain)
+    if (!meta || meta.length == 500) {
+      setOffset(offset + 1)
+    }
 
+    const newNFTS = nftlist ? nftlist.concat(meta) : meta
+    console.log(newNFTS)
+    setNFT(newNFTS)
+    return newNFTS
+  }
+  const loadNextBatch = () => {
+    if (!nftlist) return
+    const _batch = nftlist.slice(0, page * 20)
+    if (_batch.length != nftlist.length) {
+      setBatch(_batch)
+      setPage(page + 1)
+    } else {
+      if (nftlist.length < 500) {
+        nextChain()
+      } else {
+        fetchMoreData()
+      }
+    }
+  }
+  const nextChain = () => {
+    if (hasMore)
+      switch (chain) {
+        case '0xfa':
+          if (chainId !== chainList.ETH) {
+            setChain(chainList.ETH)
+            console.log('mudou pra ETH')
+            break
+          } else {
+            setHasMore(false)
+            break
+          }
+        case '0x1':
+          if (chainId !== chainList.BSC) {
+            setChain(chainList.BSC)
+            console.log('mudou pra bsc')
+            break
+          } else {
+            setHasMore(false)
+            break
+          }
+        case '0x38':
+          if (chainId !== chainList.Polygon) {
+            setChain(chainList.Polygon)
+            console.log('mudou pra Polygon')
+            break
+          } else {
+            setHasMore(false)
+            break
+          }
+        case '0x89':
+          if (chainId !== chainList.Avax) {
+            setChain(chainList.Avax)
+            console.log('mudou pra Avax')
+            break
+          } else {
+            setHasMore(false)
+            break
+          }
+        case '0xa86a':
+          if (chainId !== chainList.Fantom) {
+            console.log('mudou pra Fantom')
+            setChain(chainList.Fantom)
+            break
+          } else {
+            setHasMore(false)
+            break
+          }
+        default:
+          if (chainId) setChain(chainId)
+      }
+  }
   return (
     <div>
       <div className="m-6 p-6 text-white bg-secondary  rounded-xl w-min md:w-[885px] min-h-[1200px]">
@@ -126,12 +227,28 @@ const Home: NextPage = () => {
           </>
         ) : (
           <>
-            <div className="flex flex-wrap justify-around">
-              {nftlist &&
-                nftlist.map((nft: NFT, index: number) => (
-                  <NFTCard key={index} {...nft} />
-                ))}
-            </div>
+            {' '}
+            {nftbatch && (
+              <InfiniteScroll
+                dataLength={nftbatch.length}
+                next={loadNextBatch}
+                hasMore={hasMore}
+                loader={<h4>Loading...</h4>}
+                height={1200}
+                endMessage={
+                  <p style={{ textAlign: 'center' }}>
+                    <b>Yay! You have seen it all</b>
+                  </p>
+                }
+              >
+                <div className="flex flex-wrap justify-around">
+                  {nftbatch &&
+                    nftbatch.map((nft: NFT, index: number) => (
+                      <NFTCard key={index} {...nft} />
+                    ))}
+                </div>
+              </InfiniteScroll>
+            )}
           </>
         )}
       </div>
