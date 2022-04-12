@@ -187,7 +187,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <div className="m-6 p-6 text-white bg-secondary  rounded-xl w-min md:w-[885px] min-h-[1200px]">
-        {isAuthenticated ? (
+        {!isAuthenticated ? (
           <div className="text-2xl font-bold text-center mt-8">
             Se autentique para analizar as NFTs em sua carteira. <br />
             <button
