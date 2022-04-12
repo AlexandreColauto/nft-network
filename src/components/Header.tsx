@@ -20,10 +20,10 @@ const Header = () => {
 
   useEffect(() => {
     tryWeb3()
-  }, [])
+  }, [isAuthenticated])
 
   const tryWeb3 = () => {
-    !isWeb3Enabled && !isAuthenticated ? enableWeb3() : null
+    !isWeb3Enabled && isAuthenticated ? enableWeb3() : null
   }
   async function login() {
     console.log(isAuthenticated)
@@ -40,7 +40,6 @@ const Header = () => {
     })
   }
 
-  useEffect(() => {}, [])
   return (
     <>
       <div className="flex justify-between items-center -mt-4 max-w-screen-xl">

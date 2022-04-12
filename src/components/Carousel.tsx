@@ -9,7 +9,21 @@ import {
 
 function Carousel() {
   const [collections, setCollections] = useState([
-    { name: '', logo: '', owner: '' }
+    {
+      name: 'NFT NETWORK',
+      logo: 'https://3ladqopj2d1w.usemoralis.com:2053/server/files/ArHgiP1zDfFpNiT1oGnK7ptGNMsnyjEREVFDr0Nl/QmYtbm22rwgypYUaAadGdr8YXG5gPKKjopEjjDHRLAjtbF.png',
+      owner: ''
+    },
+    {
+      name: 'NFT NETWORK',
+      logo: 'https://3ladqopj2d1w.usemoralis.com:2053/server/files/ArHgiP1zDfFpNiT1oGnK7ptGNMsnyjEREVFDr0Nl/QmYtbm22rwgypYUaAadGdr8YXG5gPKKjopEjjDHRLAjtbF.png',
+      owner: ''
+    },
+    {
+      name: 'NFT NETWORK',
+      logo: 'https://3ladqopj2d1w.usemoralis.com:2053/server/files/ArHgiP1zDfFpNiT1oGnK7ptGNMsnyjEREVFDr0Nl/QmYtbm22rwgypYUaAadGdr8YXG5gPKKjopEjjDHRLAjtbF.png',
+      owner: ''
+    }
   ])
   const { Moralis, isAuthenticated, user } = useMoralis()
   const Collections = Moralis.Object.extend('collections')

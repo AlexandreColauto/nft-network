@@ -45,7 +45,7 @@ function Result() {
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { address } = router.query
-  const { Moralis, enableWeb3 } = useMoralis()
+  const { isAuthenticated, enableWeb3 } = useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
 
@@ -55,7 +55,7 @@ function Result() {
   }, [address])
   useEffect(() => {
     enableWeb3()
-  }, [])
+  }, [isAuthenticated])
   const fetchNFTMeta = async () => {
     console.log(address)
     if (!address) return
