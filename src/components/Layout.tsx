@@ -19,7 +19,6 @@ export default class Layout extends Component<Record<string, unknown>> {
             <div>
               <Sidebar />
               <VIP />
-              <DonationWallets />
             </div>
             <div>
               <Carousel />

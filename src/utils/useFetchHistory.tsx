@@ -13,6 +13,7 @@ function useFetchHistory() {
       address: address,
       limit: 15
     })
+    console.log(tokenMetadata.result)
     if (tokenMetadata.result?.length) {
       tokenMetadata.result.map((token) => {
         if (token.from_address == nullAddress) {

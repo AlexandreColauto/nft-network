@@ -5,13 +5,18 @@ function useFetchMeta() {
   const Web3Api = useMoralisWeb3Api()
   const { Moralis } = useMoralis()
 
-  const fetchTokenMetadata = async (address: string) => {
-    const chainId = await Moralis.chainId
+  const fetchTokenMetadata = async (
+    address: string,
+    offset: number,
+    chainId: string
+  ) => {
+    console.log(address + offset + chainId)
     if (!address || !chainId) return
     const tokenMetadata = await Web3Api.account.getNFTs({
       chain: chainId as any,
       address: address,
-      limit: 12
+      limit: 500,
+      offset: offset * 500
     })
     console.log(tokenMetadata.result)
     if (tokenMetadata.result?.length) {
@@ -28,7 +33,8 @@ function useFetchMeta() {
               itemName: metadata.data.name,
               collectionName: token.name,
               token_address: token.token_address,
-              token_id: token.token_id
+              token_id: token.token_id,
+              chain_id: chainId
             }
             return _nft
           } catch (e) {
@@ -38,7 +44,8 @@ function useFetchMeta() {
               itemName: 'No Name Avaliable',
               collectionName: token.name,
               token_address: token.token_address,
-              token_id: token.token_id
+              token_id: token.token_id,
+              chain_id: chainId
             }
             return _nft
           }

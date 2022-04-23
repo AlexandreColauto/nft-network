@@ -87,7 +87,7 @@ function useNFTDetails() {
     } catch (e) {
       console.log(e)
       const _nft = {
-        image: '/No-Image-Placeholder.svg',
+        image: '/IMAGEMNDISPONIVEL.png',
         itemName: 'No Name Avaliable',
         collectionName: token.name,
         token_address: token.address,
