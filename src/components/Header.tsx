@@ -15,6 +15,7 @@ const Header = () => {
     user,
     isWeb3Enabled,
     enableWeb3,
+    Moralis,
     web3
   } = useMoralis()
 
@@ -37,6 +38,12 @@ const Header = () => {
     }
     await authenticate({
       signingMessage: 'Log in using Moralis'
+    })
+    Moralis.onAccountChanged(async (account) => {
+      const confirmed = confirm('Link this address to your account?')
+      if (confirmed && account) {
+        await Moralis.link(account)
+      }
     })
   }
 
