@@ -18,7 +18,7 @@ function Dropdown() {
     await switchNetwork(chainId)
   }
   return (
-    <div className="mr-6">
+    <div className="mx-6">
       <button
         id="dropdownDefault"
         onClick={() => setShow(!show)}

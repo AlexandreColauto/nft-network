@@ -1,43 +1,36 @@
 import Moralis from 'moralis/types'
-import React, { useState } from 'react'
-import { useMoralis } from 'react-moralis'
+import React, { useEffect, useState } from 'react'
+import { useMoralis, useMoralisCloudFunction } from 'react-moralis'
+import ToastSuccess from './ToastSuccess'
+import { useRouter } from 'next/router'
 
 function LoginEmail() {
   const [email, setEmail] = useState('')
-  const [passworld, setPassworld] = useState('')
-  const { Moralis, isAuthenticated, web3, user } = useMoralis()
-  const [emailUser, setEmailUSer] = useState<Moralis.User>()
-  const handleSubmit = async (e: any) => {
-    const _user = new Moralis.User()
-    e.preventDefault()
-    console.log(email)
-    console.log(passworld)
-    _user.set('username', email)
-    _user.set('email', email)
-    _user.set('password', passworld)
+  const [password, setPassworld] = useState('')
+  const { Moralis, isAuthenticated, logout, user } = useMoralis()
+  const [emailUser, setEmailUser] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const router = useRouter()
 
-    try {
-      await _user.signUp()
-      console.log(_user)
-      alert('User signed up')
-    } catch (error: any) {
-      // Show the error message somewhere and let the user try again.
-      alert('Error: ' + error.code + ' ' + error.message)
-    }
-  }
+  const { fetch } = useMoralisCloudFunction('cleanUser', { autoFetch: false })
+
+  useEffect(() => {
+    checkEmailUser()
+  }, [user])
+
   const login = async (e: any) => {
-    try {
-      await Moralis.User.logOut()
+    e.preventDefault()
 
-      const emailUser = await Moralis.User.logIn(email, passworld)
-      // Do stuff after successful login.
-      console.log(emailUser.get('sessionToken'))
-      //Moralis.User.become(emailUser.get('sessionToken'))
-      if (!user) return
-      console.log(user)
-      const accounts = user.get('accounts')
-      if (accounts && accounts.length > 0) {
-        Moralis.link(accounts[0])
+    try {
+      const emailUser = await Moralis.User.logIn(email, password)
+      setEmailUser(!!emailUser)
+      console.log(emailUser)
+      if (!isSuccess) {
+        setIsSuccess(true)
+        router.reload()
+        setTimeout(function () {
+          setIsSuccess(false)
+        }, 5000)
       }
     } catch (error: any) {
       // Show the error message somewhere and let the user try again.
@@ -45,40 +38,102 @@ function LoginEmail() {
     }
   }
 
-  const handle = async (e: any) => {
-    console.log(Moralis.User.current()?.get('email'))
-    console.log(Moralis.User.current())
-    console.log(user)
+  const checkEmailUser = () => {
+    if (!user) return
+    if (user.attributes.email) {
+      setEmailUser(true)
+      linkAccount()
+      console.log(user.attributes.email)
+    } else {
+      setEmailUser(false)
+    }
   }
+  const linkAccount = () => {
+    console.log('Moralis event')
+    Moralis.onAccountChanged(async (account) => {
+      console.log('ACCOUNT CHANGED', account)
+      console.log(emailUser)
+      if (!account) {
+        console.log('no account')
+        await Moralis.User.logOut()
+      } else {
+        const confirmed = confirm('Link this address to your account?')
+        if (confirmed) {
+          try {
+            cleanDB(account)
+            const user = await Moralis.link(account)
+          } catch (e) {
+            console.log(e)
+          }
+        }
+      }
+    })
+  }
+
+  const cleanDB = async (account: string) => {
+    fetch({
+      params: { address: account },
+      onSuccess: (data) => console.log(data)
+    })
+  }
+
+  const emailLogout = () => {
+    logout()
+    setEmailUser(false)
+  }
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={email}
-          placeholder="Enter your email address"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          value={passworld}
-          placeholder="Enter your passworld"
-          onChange={(e) => setPassworld(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <button type="submit" onClick={handleSubmit} className="bg-white">
-        {' '}
-        submit
-      </button>
-      <button type="submit" onClick={login} className="bg-white">
-        {' '}
-        login
-      </button>
-      <button onClick={handle} className="bg-white">
-        {' '}
-        VERIFY
-      </button>
+      <div className="m-6 p-6 text-white bg-secondary flex flex-col justify-center items-center h-4/12 rounded-xl w-min md:w-[885px] min-h-[800px]">
+        {emailUser ? (
+          <>
+            <p className="text-4xl mb-8">Already logged in</p>
+            <button
+              className="text-white my-4 bg-violet-700 hover:bg-violet-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={emailLogout}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="text-4xl mb-8">Login using email</p>
+            <form onSubmit={login}>
+              <input
+                className="border-2 mt-2 min-w-50 border-violet-700 bg-[#1A192A]/60 mr-auto h-10 px-5 pr-16 rounded-xl text-md focus:outline-none"
+                type="text"
+                value={email}
+                placeholder="Enter your email address"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <br />
+              <input
+                type="password"
+                value={password}
+                className="border-2 mb-2 mt-1 min-w-50 border-violet-700 bg-[#1A192A]/60 mr-auto h-10 px-5 pr-16 rounded-xl text-md focus:outline-none"
+                placeholder="Enter your password"
+                onChange={(e) => setPassworld(e.target.value)}
+              />
+              <br />
+              <button
+                className="text-white my-4 bg-violet-700 hover:bg-violet-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="submit"
+                onClick={login}
+              >
+                {' '}
+                login
+              </button>
+            </form>
+            <p className="w-6/12 mt-36">
+              After login, you can link your address just by switch them in your
+              metamask, then a promp will ask you to link. Once the address is
+              linked you cannot use the metamask login with that account, the
+              address will be tied to the email.
+            </p>
+          </>
+        )}
+      </div>
+      {isSuccess && <ToastSuccess isOpen={true} toggle={setIsSuccess} />}
     </div>
   )
 }
