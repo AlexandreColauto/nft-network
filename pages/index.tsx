@@ -49,13 +49,16 @@ const Home: NextPage = () => {
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [chain, setChain] = useState('')
+  const [addressList, setAddresslist] = useState<string[]>()
+  const [addressIndex, setAddressIndex] = useState(0)
+  const [currentAddress, setCurrentAddress] = useState('')
   const Web3Api = useMoralisWeb3Api()
   const router = useRouter()
   const { Moralis, enableWeb3, user, isAuthenticated, authenticate } =
     useMoralis()
   const fetchTokenMetadata = useFetchMeta()
   const fetchHistory = useFetchHistory()
-  const address = user?.attributes.ethAddress
+  const address = user?.attributes.accounts
   const chainId = Moralis.chainId
   const chainList = {
     ETH: '0x1',
@@ -68,7 +71,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     fetchNFTMeta()
     getHistory()
-  }, [isAuthenticated, chainId])
+  }, [isAuthenticated, chainId, currentAddress])
 
   useEffect(() => {
     enableWeb3()
@@ -82,26 +85,27 @@ const Home: NextPage = () => {
     loadNextBatch()
   }, [nftlist])
 
+  useEffect(() => {
+    getUserAddressList()
+  }, [user?.attributes.accounts])
+
   const fetchNFTMeta = async () => {
-    console.log(address)
-    if (!address || !chainId) return
+    if (!currentAddress || !chainId) return
     setChain(chainId)
-    const meta = await fetchTokenMetadata(address as string, 0, chainId)
-    console.log(meta)
+    const meta = await fetchTokenMetadata(currentAddress, 0, chainId)
     if (!meta) nextChain(chainId)
     setNFT(meta)
   }
   const getHistory = async () => {
     if (address && !metadata) {
       console.log('fetch history')
-      const metadata = await fetchHistory(address as string)
+      const metadata = await fetchHistory(currentAddress)
       setMetadata(metadata)
     }
   }
   const fetchMoreData = async () => {
-    console.log(address)
-    if (!address || !chainId) return
-    const meta = await fetchTokenMetadata(address as string, offset, chain)
+    if (!currentAddress || !chainId) return
+    const meta = await fetchTokenMetadata(currentAddress, offset, chain)
     if (meta?.length == 500) {
       setOffset(offset + 1)
     }
@@ -117,11 +121,9 @@ const Home: NextPage = () => {
   }
   const loadNextBatch = () => {
     if (!nftlist) return
-    console.log('new Batch!')
     const _batch = nftlist.slice(0, page * 20)
     if (_batch.length != nftlist.length) {
       setBatch(_batch)
-      console.log(_batch)
       setPage(page + 1)
     } else {
       if (nftlist.length < 500) {
@@ -131,6 +133,7 @@ const Home: NextPage = () => {
       }
     }
   }
+
   const nextChain = (_chain: string) => {
     console.log('next chain' + _chain)
     if (hasMore)
@@ -141,7 +144,7 @@ const Home: NextPage = () => {
             console.log('mudou pra ETH')
             break
           } else {
-            setHasMore(false)
+            nextAddress()
             break
           }
         case '0x1':
@@ -150,7 +153,7 @@ const Home: NextPage = () => {
             console.log('mudou pra bsc')
             break
           } else {
-            setHasMore(false)
+            nextAddress()
             break
           }
         case '0x38':
@@ -159,7 +162,7 @@ const Home: NextPage = () => {
             console.log('mudou pra Polygon')
             break
           } else {
-            setHasMore(false)
+            nextAddress()
             break
           }
         case '0x89':
@@ -168,7 +171,7 @@ const Home: NextPage = () => {
             console.log('mudou pra Avax')
             break
           } else {
-            setHasMore(false)
+            nextAddress()
             break
           }
         case '0xa86a':
@@ -177,12 +180,29 @@ const Home: NextPage = () => {
             setChain(chainList.Fantom)
             break
           } else {
-            setHasMore(false)
+            nextAddress()
             break
           }
         default:
           if (chainId) setChain(chainId)
       }
+  }
+
+  const getUserAddressList = () => {
+    if (!user?.attributes.accounts) return
+    setAddresslist(user?.attributes.accounts)
+    console.log(user?.attributes.accounts)
+    setCurrentAddress(user?.attributes.accounts[0])
+  }
+  const nextAddress = () => {
+    if (!addressList) return
+    if (addressList.length > 1 && addressIndex < addressList.length - 1) {
+      setAddressIndex(addressIndex + 1)
+      setCurrentAddress(addressList[addressIndex + 1])
+      console.log(addressList[addressIndex + 1])
+    } else {
+      setHasMore(false)
+    }
   }
   return (
     <div>

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import SearchBar from './Search'
 import { useMoralis } from 'react-moralis'
 import Dropdown from './Dropdown'
+import Link from 'next/link'
 
 const APP_ID = 'w0I1JAJxvmVnwRJ7fFqU4qCgKkmrHpZpVuLSJuoI'
 const SERVER_URL = 'https://ib6vmhqcic5f.usemoralis.com:2053/server'
@@ -58,6 +59,12 @@ const Header = () => {
         <button className="mr-10 text-white font-bold " onClick={login}>
           Connect Wallet
         </button>
+        <Link href="/Signup">
+          <button className="mr-10 text-white font-bold ">Signup</button>
+        </Link>
+        <Link href="/Login">
+          <button className="mr-10 text-white font-bold ">Login</button>
+        </Link>
       </div>
     </>
   )
