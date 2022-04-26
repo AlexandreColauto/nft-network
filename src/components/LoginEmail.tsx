@@ -62,6 +62,12 @@ function LoginEmail() {
           try {
             cleanDB(account)
             const user = await Moralis.link(account)
+            if (!isSuccess) {
+              setIsSuccess(true)
+              setTimeout(function () {
+                setIsSuccess(false)
+              }, 5000)
+            }
           } catch (e) {
             console.log(e)
           }
